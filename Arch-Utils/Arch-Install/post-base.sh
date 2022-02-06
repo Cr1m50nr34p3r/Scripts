@@ -84,7 +84,7 @@ else
         nerd-fonts-jetbrains-mono
         todoist-appimage
         notion-app
-        ytop
+        #ytop
         lightdm-webkit-theme-aether
         zip
         atom
@@ -100,6 +100,7 @@ else
         jsoncpp
         dart
         nim
+        btop
         #nimsuggest-git
         python-black
         python-pyflakes
