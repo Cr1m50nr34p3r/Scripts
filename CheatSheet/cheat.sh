@@ -26,14 +26,13 @@ case $1 in
 	
 
 	selected=$( echo "${languages[@]}" "${utils[@]}" | xargs -n 1 | rofi -dmenu -P "Select Language/Util: ")
-	query=$(echo "" | rofi -dmenu)
+	query=$(rofi -dmenu -p "Enter Query" -l 0 | tr ' ' '+')
 	if [[ "${languages[@]}" =~ "${selected}" ]]
 	then
-		query=$( echo $query | sed 's/ /+/g' )
-		kitty -e --hold  curl cht.sh/$selected/$query
+        kitty -e --hold  curl cht.sh/$selected/$query
 	elif [[ "${utils[@]}" =~ "${selected}" ]]
 	then
-		kitty -e --hold curl cht.sh/$selected~$query
+        kitty -e --hold curl cht.sh/$selected~$query
 	fi
 	;;
 "f" | "F")
@@ -42,12 +41,11 @@ case $1 in
 	if [[ "${languages[@]}" =~ "${selected}" ]]
 	then
 		clear
-		query=$( echo $query | sed 's/ /+/g' )
-		curl cht.sh/$selected/$query 
+		tmux neww "curl cht.sh/$selected/$query | less"  
 	elif [[ "${utils[@]}" =~ "${selected}" ]]
 	then
 		clear
-		curl cht.sh/$selected~$query
+		tmux neww curl cht.sh/$selected~$query | less
 	fi
 	;;
 *)
