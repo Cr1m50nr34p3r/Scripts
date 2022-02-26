@@ -1,4 +1,12 @@
 #!/bin/bash
+#############################################
+###       _           _             _     ###
+### _ __ (_)_ __ __ _| |_ ___   ___| |__  ###
+###| '_ \| | '__/ _` | __/ _ \ / __| '_ \ ###
+###| |_) | | | | (_| | ||  __/_\__ \ | | |###
+###| .__/|_|_|  \__,_|\__\___(_)___/_| |_|###
+###|_|                                    ###
+#############################################
 query=$( rofi -dmenu -l 0 -p "Search Torrent: "| tr ' ' '+' )
 base_url="https://1337x.wtf"
 declare -A torrent_urls
@@ -17,7 +25,7 @@ notify-send "got magnet link"
 tool_opt=$(echo "STREAM DOWNLOAD COPY" | tr ' ' '\n' | rofi -dmenu -i )
 case $tool_opt in
     DOWNLOAD ) qbittorrent "$magnet_link" && notify-send "Downloading torrent for $selection" ;;
-    STREAM ) webtorrent "$magnet_link" --mpv && notify-send "Streaming torrent for $selection" ;; 
+    STREAM ) peerflix -k "$magnet_link"  && notify-send "Streaming torrent for $selection" ;; 
     COPY | * ) echo "$magnet_link" | xclip -select clipboard  && notify-send "Magnet link for $selection has been copied to clipboard"
 esac 
 rm -fv "$HOME/.cache/1337x.wtf"
