@@ -7,9 +7,13 @@
 ###| .__/|_|_|  \__,_|\__\___(_)___/_| |_|###
 ###|_|                                    ###
 #############################################
-query=$( rofi -dmenu -l 0 -p "Search Torrent: "| tr ' ' '+' )
+
+### Variables
 base_url="https://1337x.wtf"
+query=$( rofi -dmenu -l 0 -p "Search Torrent: "| tr ' ' '+' )
 declare -A torrent_urls
+
+### Main
 notify-send "getting list of available torrents"
 curl -s "$base_url/search/$query/1/" -o "$HOME/.cache/1337x.wtf"
 for link in $(grep -Eo '"\/torrent\/[0-9]{7}\/.*/"' "$HOME/.cache/1337x.wtf" | sed 's/"\(.*\)"/\1/g')
@@ -28,5 +32,7 @@ case $tool_opt in
     STREAM ) peerflix -k "$magnet_link"  && notify-send "Streaming torrent for $selection" ;; 
     COPY | * ) echo "$magnet_link" | xclip -select clipboard  && notify-send "Magnet link for $selection has been copied to clipboard"
 esac 
+
+### CLeaning up
 rm -fv "$HOME/.cache/1337x.wtf"
 notify-send "Enjoy Watching !!!"
