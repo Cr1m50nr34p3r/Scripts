@@ -42,7 +42,7 @@ do
 	esac
 done
 
-if (($# < 2 ))
+if (($# < 1 ))
 then
 	Select="Personal"
 fi
