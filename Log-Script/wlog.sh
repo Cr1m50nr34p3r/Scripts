@@ -38,13 +38,13 @@ do
 		s) Select="Schedule";;
 		d) Select="Dream";;
 		p) Select="Personal";;
-		h | * ) help ;; && exit
+		h | * ) help  && exit ;;
 	esac
 done
 
 if (($# < 2 ))
 then
-	Select=".Personal"
+	Select="Personal"
 fi
 
 
