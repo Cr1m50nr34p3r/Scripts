@@ -50,7 +50,7 @@ fi
 
 ### Main
 case "$Select" in
-	"Dream") DirCheck ".$Select" && nvim ~/.dlogs/.Dream/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md ;;
-	"Schedule") DirCheck ".$Select" && nvim ~/.dlogs/.Schedule/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md ;;
-	"Personal" | *) DirCheck ".$Select" && nvim ~/.dlogs/.Personal/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md ;;
+	"Dream") DirCheck ".$Select" && $EDITOR ~/.dlogs/.Dream/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md || nvim ~/.dlogs/.Dream/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md ;;
+	"Schedule") DirCheck ".$Select" && $EDITOR ~/.dlogs/.Schedule/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md || nvim ~/.dlogs/.Schedule/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md ;;
+	"Personal" | *) DirCheck ".$Select" && $EDITOR ~/.dlogs/.Personal/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md || nvim ~/.dlogs/.Personal/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md ;;
 esac
