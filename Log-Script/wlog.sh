@@ -8,46 +8,43 @@
 ###                  |___/             ###
 ##########################################
 ### Variables
-LogOpts=(
-	"Personal"
-	"Dream"
-	"Schedule"
-	)
-Months=(
-	"Jan"
-	"Feb"
-	"Mar"
-	"Apr"
-	"May"
-	"Jun"
-	"Jul"
-	"Aug"
-	"Sep"
-	"Oct"
-	"Nov"
-	"Dec"
-	)
-
+Select=""
+CurDecade="$(date +%Y | sed 's/\(.*\)[0-9]$/\10/g')s"
 ### Function
 ## Check if the required directory exists
 function DirCheck {
 	
-		for month in ${Months[@]}
-		do
-			if [[ ! -e "$HOME/.dlogs/$1/$(date +%Y)/$month" || ! -d "$HOME/.dlogs/$1/$(date +%Y)/$month" ]]
-			then
-				mkdir -pv "$HOME/.dlogs/$1/$(date +%Y)/$month"
-			fi
-		done
+	if [[ ! -e "$HOME/.dlogs/$1/$CurDecade/$(date +%Y)/$(date +%b)" || ! -d "$HOME/.dlogs/$1/$CurDecade/$(date +%Y)/$(date +%b)" ]]
+	then
+		mkdir -pv "$HOME/.dlogs/$1/$CurDecade/$(date +%Y)/$(date +%b)"
+	fi
 			
 
 		
 }
 
+function help {
+		echo "usage: 	$0 [-p|d|s]"
+		echo "d: 		Dream log"
+		echo "p: 		Personal log"
+		echo "s: 		Schedule"
+	}
+
+### Options
+while getopts "sdph" opt 
+do
+	case "$opt" in
+		s) Select="Schedule";;
+		d) Select="Dream";;
+		p) Select="Personal";;
+		h | *) help ;;
+	esac
+done
+
+
 ### Main
-Select=$(echo "${LogOpts[@]}" | tr ' ' '\n' | fzf --prompt "Choose type of log")
 case "$Select" in
-	"Personal" | *) DirCheck ".$Select" && nvim ~/.dlogs/.Personal/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md ;;
-	"Dream") DirCheck ".$Select" && nvim ~/.dlogs/.Dream/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md ;;
-	"Schedule") DirCheck ".$Select" && nvim ~/.dlogs/.Schedule/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md ;;
-esac	
+	"Dream") DirCheck ".$Select" && nvim ~/.dlogs/.Dream/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md ;;
+	"Schedule") DirCheck ".$Select" && nvim ~/.dlogs/.Schedule/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md ;;
+	"Personal" | *) DirCheck ".$Select" && nvim ~/.dlogs/.Personal/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md ;;
+esac
