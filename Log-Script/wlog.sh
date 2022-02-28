@@ -33,13 +33,19 @@ function help {
 ### Options
 while getopts "sdph" opt 
 do
+
 	case "$opt" in
 		s) Select="Schedule";;
 		d) Select="Dream";;
 		p) Select="Personal";;
-		h | *) help ;;
+		h | * ) help ;; && exit
 	esac
 done
+
+if (($# < 2 ))
+then
+	Select=".Personal"
+fi
 
 
 ### Main
