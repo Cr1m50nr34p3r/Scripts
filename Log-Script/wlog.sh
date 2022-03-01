@@ -10,6 +10,7 @@
 ### Variables
 Select=""
 CurDecade="$(date +%Y | sed 's/\(.*\)[0-9]$/\10s/g')"
+
 ### Function
 function help {
 		echo "usage: 	$0 [-p|d|s]"
@@ -39,4 +40,4 @@ if [[ ! -e "$HOME/.dlogs/.$Select/$CurDecade/$(date +%Y)/$(date +%b)" || ! -d "$
 then
 	mkdir -pv "$HOME/.dlogs/.$Select/$CurDecade/$(date +%Y)/$(date +%b)"
 fi
-$EDITOR "~/.dlogs/.$Select/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md" || vim "~/.dlogs/.$Select/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md" ;;
+$EDITOR "~/.dlogs/.$Select/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md" || vim "~/.dlogs/.$Select/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md" 
