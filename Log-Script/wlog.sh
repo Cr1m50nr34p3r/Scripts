@@ -35,9 +35,13 @@ else
 	done
 fi
 
+## Directory and files to save in
+Dir="$HOME/.dlogs/.$Select/$CurDecade/$(date +%Y)/$(date +%b)"
+FileName="$Dir/$(date +%d-%m-%Y).md" 
+
 ### Main
-if [[ ! -e "$HOME/.dlogs/.$Select/$CurDecade/$(date +%Y)/$(date +%b)" || ! -d "$HOME/.dlogs/.$Select/$CurDecade/$(date +%Y)/$(date +%b)" ]]
+if [[ ! -e "$Dir" || ! -d "$Dir" ]]
 then
-	mkdir -pv "$HOME/.dlogs/.$Select/$CurDecade/$(date +%Y)/$(date +%b)"
+	mkdir -pv "$Dir"
 fi
-$EDITOR "~/.dlogs/.$Select/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md" || vim "~/.dlogs/.$Select/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md" 
+$EDITOR "$FileName" || vim "$FileName" 
