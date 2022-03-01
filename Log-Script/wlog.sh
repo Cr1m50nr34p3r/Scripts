@@ -9,16 +9,8 @@
 ##########################################
 ### Variables
 Select=""
-CurDecade="$(date +%Y | sed 's/\(.*\)[0-9]$/\10/g')s"
+CurDecade="$(date +%Y | sed 's/\(.*\)[0-9]$/\10s/g')"
 ### Function
-## Check if the required directory exists
-function DirCheck {
-	if [[ ! -e "$HOME/.dlogs/$1/$CurDecade/$(date +%Y)/$(date +%b)" || ! -d "$HOME/.dlogs/$1/$CurDecade/$(date +%Y)/$(date +%b)" ]]
-	then
-		mkdir -pv "$HOME/.dlogs/$1/$CurDecade/$(date +%Y)/$(date +%b)"
-	fi
-}
-
 function help {
 		echo "usage: 	$0 [-p|d|s]"
 		echo "d: 		Dream log"
@@ -27,22 +19,24 @@ function help {
 	}
 
 ### Selection
-while getopts "sdph" opt 
-do
-	case "$opt" in
-		s) Select="Schedule";;
-		d) Select="Dream";;
-		p) Select="Personal";;
-		h | * ) help  && exit ;;
-	esac
-done
-
 if (($# < 1 ))
 then
 	Select="Personal"
+else
+	while getopts "sdph" opt 
+	do
+		case "$opt" in
+			s) Select="Schedule";;
+			d) Select="Dream";;
+			p) Select="Personal";;
+			h | * ) help  && exit 1 ;;
+		esac
+	done
 fi
 
-
 ### Main
-DirCheck ".$Select"
-$EDITOR "~/.dlogs/.Dream/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md" || "vim ~/.dlogs/.Dream/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md" ;;
+if [[ ! -e "$HOME/.dlogs/.$Select/$CurDecade/$(date +%Y)/$(date +%b)" || ! -d "$HOME/.dlogs/.$Select/$CurDecade/$(date +%Y)/$(date +%b)" ]]
+then
+	mkdir -pv "$HOME/.dlogs/.$Select/$CurDecade/$(date +%Y)/$(date +%b)"
+fi
+$EDITOR "~/.dlogs/.$Select/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md" || vim "~/.dlogs/.$Select/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md" ;;
