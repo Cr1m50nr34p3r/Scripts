@@ -22,6 +22,7 @@ then
     echo "PLEASE DO NOT RUN THE SCRIPT AS ROOT"
     exit
 else
+	sudo timedatectl --adjust-system-clock set-local-rtc true
     pushd "$HOME" || return
     ############################################################################################
     ### Variables
@@ -132,6 +133,7 @@ else
 
     )
     pip_packages=(
+	    neovim
 	    jedi
 	    autopep8
 	    flake8
