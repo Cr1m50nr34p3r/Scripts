@@ -4,7 +4,7 @@ case $1 in
         file1=$(find $HOME -iname '*.pdf' | rofi -dmenu -p "Select file: " )
 	if [[ -e "$file1" ]]
 	then
-		zathura --fork $file1
+		zathura --fork "$file1"
 	fi
 	;;
     'f' | 'F' | '' )

@@ -146,6 +146,7 @@ else
 	    pipenv
 	    nose
 	    pytest
+		debugpy
 	    )
     ### FUNCTIONS
     install_driver () {
