@@ -35,6 +35,8 @@ else
 	packages=(
 		xorg
 		xorg-xinit
+        ncdu
+        timeshift
 		nitrogen
 #        picom-jonaburg-fix-git
 		picom-ibhagwan
@@ -184,7 +186,6 @@ else
 		echo "#######################"
 		echo ""
 	}
-
 ############################################################################################
 	echo "############################################################"
 	echo "### BEFORE RUNNING THE SCRIPT ENABLE MULTILIB REPOSITORY ###"
