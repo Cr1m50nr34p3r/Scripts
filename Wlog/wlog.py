@@ -22,10 +22,10 @@ else:
     EDITOR = environ["EDITOR"] if environ["EDITOR"] is not None else "nvim"
 if len(argv) > 1:
     parser = ArgumentParser(description="A simple command line logger")
-    parser.add_argument("-s", "--schedule", help="Write Scheduke", metavar="is_schedule", required=False, action="store_true")
-    parser.add_argument("-t", "--task", help="Write Task", metavar="is_todo", required=False, action="store_true")
-    parser.add_argument("-d", "--dream", help="Write Dream log", metavar="is_dream", required=False, action="store_true")
-    parser.add_argument("-p", "--personal", help="Write Personal log", metavar="is_personal", required=False, action="store_true")
+    parser.add_argument("-s", "--schedule", help="Write Scheduke", required=False, action="store_true")
+    parser.add_argument("-t", "--task", help="Write Task", required=False, action="store_true")
+    parser.add_argument("-d", "--dream", help="Write Dream log", required=False, action="store_true")
+    parser.add_argument("-p", "--personal", help="Write Personal log", required=False, action="store_true")
     args = parser.parse_args()
     is_schedule = args.schedule
     is_todo = args.task
