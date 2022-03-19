@@ -18,7 +18,7 @@ if system == "Windows":
     log_dir = environ["USERPROFILE"] + "/Desktop/.dlogs" if environ["USERPROFILE"] is not None else "C:/Users/Public/Desktop/.dlogs"
     EDITOR = environ["EDITOR"] if environ["EDITOR"] is not None else "notepad"
 else:
-    log_dir = environ["HOME"]
+    log_dir = environ["HOME"] + "/.dlogs"
     EDITOR = environ["EDITOR"] if environ["EDITOR"] is not None else "nvim"
 if len(argv) > 1:
     parser = ArgumentParser(description="A simple command line logger")
