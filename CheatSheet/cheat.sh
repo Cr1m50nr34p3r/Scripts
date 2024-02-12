@@ -35,10 +35,10 @@ case $1 in
 	query=$(rofi -dmenu -p "Enter Query" -l 0 | tr ' ' '+')
 	if [[ "${languages[@]}" =~ "${selected}" ]]
 	then
-        kitty -e --hold  curl cht.sh/$selected/$query
+       kitty -e --hold curl  cht.sh/$selected/$query | less -r
 	elif [[ "${utils[@]}" =~ "${selected}" ]]
 	then
-        kitty -e --hold curl cht.sh/$selected~$query
+        kitty -e --hold  curl cht.sh/$selected~$query | less -r
 	fi
 	;;
 "f" | "F")
@@ -47,11 +47,11 @@ case $1 in
 	if [[ "${languages[@]}" =~ "${selected}" ]]
 	then
 		clear
-		tmux neww "curl cht.sh/$selected/$query | less"  
+		curl cht.sh/$selected/$query | less -r 
 	elif [[ "${utils[@]}" =~ "${selected}" ]]
 	then
 		clear
-		tmux neww curl cht.sh/$selected~$query | less
+		curl cht.sh/$selected~$query | less
 	fi
 	;;
 *)

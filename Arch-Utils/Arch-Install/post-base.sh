@@ -126,13 +126,13 @@ else
 #mu
 		dash
 		qbittorrent
-		virt-manager 
 		qemu 
 		vde2 
 		ebtables 
 		dnsmasq 
 		bridge-utils 
 		openbsd-netcat
+    torbrowser-launcher
 
 	)
 	pip_packages=(
@@ -247,7 +247,7 @@ else
 	echo "### INSTALLING PIP PACKAGES ###"
 	echo "###############################"
 
-	pip install "${pip_packages[@]}"
+  paru -S --needed --noconfirm  "python-${pip_packages[@]}"
 	clear
 	echo "##################################"
 	echo "### SETTING UP GRUB BOOTLOADER ###"
@@ -256,22 +256,45 @@ else
 	sudo os-prober
 	echo "updating grub ....."
 	sudo grub-mkconfig -o /boot/grub/grub.cfg >> /dev/null
-	sudo sed -i "s/^#GRUB_DISABLE_OS_PROBER/GRUB_DISABLE_OS_PROBER/g"
+	sudo sed -i "s/^#GRUB_DISABLE_OS_PROBER/GRUB_DISABLE_OS_PROBER/g" 
 	sudo grub-mkconfig -o /boot/grub/grub.cfg 
 	echo "ADDING GRUB BOOTLOADER THEME"
 	pushd "$HOME/Github"
 	git clone https://github.com/ChrisTitusTech/Top-5-Bootloader-Themes
 	sudo Top-5-Bootloader-Themes/install.sh
 	clear 
-	echo "###############################"
-	echo "### SETTING UP VIRT-MANAGER ###"
-	echo "###############################"
-	sudo systemctl start libvirtd
-	sudo virsh net-start default
-	sudo virsh net-autostart default
-	sudo virsh net-list --all
-	sudo usermod -aG libvirt "$USER"
-	clear
+
+    printf  '%s' "virt-manger(1) or Vbox(2): "
+    read -r virt
+    case $is_driver in
+        "1")
+        echo "###############################"
+        echo "### SETTING UP VIRT-MANAGER ###"
+        echo "###############################"
+        sudo pacman -S virt-manager
+        sudo systemctl start libvirtd
+        sudo virsh net-start default
+        sudo virsh net-autostart default
+        sudo virsh net-list --all
+        sudo usermod -aG libvirt "$USER"
+        clear
+        ;;
+        "2" | "")
+        echo "###############################"
+        echo "#### SETTING UP VIRTUALBOX ####"
+        echo "###############################"
+
+        sudo pacman -S virtualbox
+        sudo echo vboxdrv >> /etc/modules-load.d/virtualbox.conf
+        sudo usermod -aG vboxusers $(whoami)
+        clear
+
+        ;;
+        *)
+        echo "please enter Y/n"
+        install_driver "$1"
+        ;;
+    esac
 	echo "#################################"
 	echo "### SETTING UP OPENSSH-SERVER ###"
 	echo "#################################"

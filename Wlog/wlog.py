@@ -22,7 +22,7 @@ else:
     EDITOR = environ["EDITOR"] if environ["EDITOR"] is not None else "nvim"
 if len(argv) > 1:
     parser = ArgumentParser(description="A simple command line logger")
-    parser.add_argument("-s", "--schedule", help="Write Scheduke", required=False, action="store_true")
+    parser.add_argument("-s", "--schedule", help="Write Schedule", required=False, action="store_true")
     parser.add_argument("-t", "--task", help="Write Task", required=False, action="store_true")
     parser.add_argument("-d", "--dream", help="Write Dream log", required=False, action="store_true")
     parser.add_argument("-p", "--personal", help="Write Personal log", required=False, action="store_true")
