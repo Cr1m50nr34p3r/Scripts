@@ -16,13 +16,15 @@ echo "####################"
 echo "### PARTITIONING ###"
 echo "####################"
 echo ""
+lsblk
+echo ""
 echo "Create 2 partitions:"
-echo "\n512MB\tEFI System\tBoot "
-echo "\n - \tLinux File System\tRoot "
+printf "\n512MB\tEFI System\tBoot \n"
+printf "\n - \tLinux File System\tRoot \n"
 echo ""
 printf "Choose disk for partitioning: "
 read -r disk
-cfdisk $disk
+cfdisk /dev/$disk
 clear
 echo "########################"
 echo "### FORMATTING DISKS ###"
