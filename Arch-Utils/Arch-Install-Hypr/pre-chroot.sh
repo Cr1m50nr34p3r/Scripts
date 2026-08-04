@@ -11,7 +11,6 @@
 
 # time
 timedatectl set-ntp true
-lsblk
 clear
 echo "####################"
 echo "### PARTITIONING ###"
@@ -20,7 +19,7 @@ echo ""
 echo "Create 2 partitions:"
 echo "\n512MB\tEFI System\tBoot "
 echo "\n - \tLinux File System\tRoot "
-clear
+echo ""
 printf "Choose disk for partitioning: "
 read -r disk
 cfdisk $disk
