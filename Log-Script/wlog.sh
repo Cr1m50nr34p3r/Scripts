@@ -37,11 +37,24 @@ fi
 
 ## Directory and files to save in
 Dir="$HOME/.dlogs/.$Select/$CurDecade/$(date +%Y)/$(date +%b)"
-FileName="$Dir/$(date +%d-%m-%Y).md" 
+FileName="$Dir/$(date +%d-%m-%Y).md"
+en_file="$FileName.gpg"
+
+
+
 
 ### Main
+
+if [[ -f $en_file ]] then
+    gpg -d $en_file > $FileName && rm $en_file && gpg-conf --kill gpg-agent || {
+      echo "Couldnt decrypt" >&2
+      exit 1
+    }
+fi
+
 if [[ ! -e "$Dir" || ! -d "$Dir" ]]
 then
 	mkdir -pv "$Dir"
 fi
 $EDITOR "$FileName" || vim "$FileName" 
+gpg -c $FileName && rm $FileName || echo "unencrypted"
