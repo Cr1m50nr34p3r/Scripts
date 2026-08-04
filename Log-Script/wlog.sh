@@ -46,10 +46,11 @@ en_file="$FileName.gpg"
 ### Main
 
 if [[ -f $en_file ]] then
-    gpg -d $en_file > $FileName && rm $en_file && gpg-conf --kill gpg-agent || {
+    gpg -d $en_file > $FileName && rm $en_file || {
       echo "Couldnt decrypt" >&2
       exit 1
     }
+    gpgconf --kill gpg-agent 
 fi
 
 if [[ ! -e "$Dir" || ! -d "$Dir" ]]
@@ -58,3 +59,10 @@ then
 fi
 $EDITOR "$FileName" || vim "$FileName" 
 gpg -c $FileName && rm $FileName || echo "unencrypted"
+gpgconf --kill gpg-agent 
+
+pushd $HOME/.dlogs/
+git add .
+git commit -m "Added an Entry"
+git push origin
+popd
