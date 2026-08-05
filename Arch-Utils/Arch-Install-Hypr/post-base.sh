@@ -34,5 +34,5 @@ zig build
 zig build installexe -Dinit_system=systemd
 sudo systemctl enable ly@tty2.service
 sudo curl https://codeberg.org/fairyglade/ly-community/raw/branch/main/animations/dur/blackhole-smooth-240x67.dur --output /etc/ly/blackhole-smooth-240x67.dur
-sudo sed -i "s/\(dur_file_path =\).*/\1 blackhole-smooth-240x67.dur/" /etc/ly/config.ini
+sudo sed -i "s/\(dur_file_path =\).*/\1 \/etc\/ly\/blackhole-smooth-240x67.dur/" /etc/ly/config.ini
 
