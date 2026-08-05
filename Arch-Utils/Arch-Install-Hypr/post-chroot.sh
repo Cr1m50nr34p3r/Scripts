@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
-## ENV Variable
 
-installed_packages = (
+installed_packages=(
   acpi
   alsa-firmware
   alsa-utils
@@ -134,14 +133,14 @@ echo '[zram0]' > /etc/systemd/zram-generator.conf
 echo 'zram-size = ram / 2' >> /etc/systemd/zram-generator.conf
 echo 'compression-algorithm = zstd' >> /etc/systemd/zram-generator.conf
 echo 'mount-point = /dev/zram0' >> /etc/systemd/zram-generator.conf
-pacman -S grub efibootmgr
+pacman -S --needed grub efibootmgr
 clear
 lsblk
 echo ""
 printf "EFI-Partition: "
 read -r efi_part
-mount /dev/$efi_part /boot/ 
-grub-install --target=x86_64-efi --efi-directory = /boot --bootloader-id=GRUB
+mount /dev/$efi_part /boot/
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
 pacman -S networkmanager
 clear
