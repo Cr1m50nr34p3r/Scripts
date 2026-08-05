@@ -140,24 +140,14 @@ lsblk
 echo ""
 printf "EFI-Partition: "
 read -r efi_part
-mkdir -pv /boot/efi
-mount /dev/$efi_part /boot/efi
-grub-install --target=x86_64-efi --efi-directory = /boot/efi --bootloader-id=GRUB
+mount /dev/$efi_part /boot/ 
+grub-install --target=x86_64-efi --efi-directory = /boot --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
-pacman -S networkmanager sddm 
+pacman -S networkmanager
 clear
 printf "username: "
 read -r username
 su  $username
-cd
-mkdir -pv Github
-cd Github
-git clone https://aur.archlinux.org/paru.git
-cd paru
-makepkg -si 
-cd 
-paru -S --needed "${installed_packages[@]}"
-clear
 echo "DONE"
 
 
