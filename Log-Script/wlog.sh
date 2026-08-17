@@ -8,10 +8,10 @@
 ###                  |___/             ###
 ##########################################
 ### Variables
-Select="Personal"
+Space="Personal"
 Write=1
 CurDecade="$(date +%Y | sed 's/\(.*\)[0-9]$/\10s/g')"
-FileName="$HOME/.dlogs/.$Select/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md"
+FileName="$HOME/.dlogs/.$Space/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md"
 ### Function
 write() {
   Dir=$(echo "$1" | sed 's/^\(.*\)\/[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]\.md/\1/g')
@@ -49,18 +49,18 @@ function help {
     echo "r:    Read {date:- t=today}"
 	}
 
-### Selection
+### Spaceion
 while getopts ":shpr:h" opt 
 do
   case "$opt" in
     s)
-      Select="Schedule"
+      Space="Schedule"
       ;;
     d) 
-      Select="Dream"
+      Space="Dream"
       ;;
     p)
-      Select="Personal"
+      Space="Personal"
       ;;
     r)
       Write=0
@@ -89,7 +89,7 @@ do
       Date=$(echo $date | sed "s/\([0-9][0-9]\)-\([0-9][0-9]\)-\([0-9][0-9][0-9][0-9]\)/\1/g")
       Decade="$(echo $Year | sed 's/\(.*\)[0-9]$/\10s/g')"
       MonthWord="${months[$Month]}"
-      FileName="$HOME/.dlogs/.$Select/$Decade/$Year/$MonthWord/$date.md"
+      FileName="$HOME/.dlogs/.$Space/$Decade/$Year/$MonthWord/$date.md"
 
 
       
