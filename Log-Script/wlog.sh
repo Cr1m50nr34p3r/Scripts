@@ -41,14 +41,12 @@ dec() {
   fi
 }
 
-gitup() {
-}
 function help {
 		echo "usage: 	$0 [-p|d|s]"
 		echo "d: 		Dream log"
 		echo "p: 		Personal log"
 		echo "s: 		Schedule"
-    echo "r:    Read"
+    echo "r:    Read {date:- t=today}"
 	}
 
 ### Selection
@@ -66,7 +64,7 @@ do
       ;;
     r)
       Write=0
-      if [[ "$OPTARG" == "r" ]]
+      if [[ "$OPTARG" == "t" ]]
       then 
         date="$(date +%d-%m-%Y)"
       else 
