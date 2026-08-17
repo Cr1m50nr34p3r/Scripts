@@ -23,7 +23,7 @@ write() {
 
 }
 enc() {
-  gpg -c $1 && rm -v $1 || echo "unencrypted"
+  gpg --quiet -c $1 && rm $1 || echo "unencrypted"
   gpgconf --kill gpg-agent 
 
 }
@@ -32,13 +32,15 @@ dec() {
   en_file="$1.gpg"
   if [[ -f $en_file ]] 
   then
-    gpg -d $en_file > $1 || {
+    gpg --quiet -d $en_file || {
       echo "Couldnt decrypt" >&2
       exit 1
     }
-    rm -v $en_file
-    gpgconf --kill gpg-agent 
+  else
+    echo "File Not Found trying to find unencrypted file" >&2
+    return 1
   fi
+  gpgconf --kill gpg-agent
 }
 
 function help {
@@ -49,7 +51,7 @@ function help {
     echo "r:    Read {date:- t=today}"
 	}
 
-### Spaceion
+### Space
 while getopts ":shpr:h" opt 
 do
   case "$opt" in
@@ -91,7 +93,6 @@ do
       MonthWord="${months[$Month]}"
       FileName="$HOME/.dlogs/.$Space/$Decade/$Year/$MonthWord/$date.md"
 
-
       
 
       ;;
@@ -99,26 +100,29 @@ do
   esac
 done
 ##### MAIN BLOCK
-pushd $HOME/.dlogs/ 
-git pull 
-if [[ -e "$FileName.gpg" ]]
-then
-  dec $FileName
-fi
-if [[ ! -e "$FileName" ]] 
-then
-  echo "FILE NOT FOUND"
-  exit 1
-fi
+pushd $HOME/.dlogs/ > /dev/null
+git pull --rebase || {
+    echo "Git pull failed" >&2
+    popd > /dev/null
+    exit 1
+}
 if (( Write ))
-then
-  write $FileName
+  then
+    if logs=$(dec $FileName)
+    then
+      echo $logs > $FileName
+      rm "$FileName.gpg"
+    fi
+    write $FileName || {
+      echo "FILE NOT FOUND"
+      exit 1
+    }
+    enc $FileName
+    git add . > /dev/null
+    git commit -m "Added an Entry" > /dev/null
+    git push origin 
 else 
-    cat $FileName | less
+  (dec $FileName || cat $FileName) | less 
 fi
+popd > /dev/null
 
-enc $FileName
-git add .
-git commit -m "Added an Entry"
-git push origin
-popd
