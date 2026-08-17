@@ -42,11 +42,6 @@ dec() {
 }
 
 gitup() {
-  pushd $HOME/.dlogs/
-  git add .
-  git commit -m "Added an Entry"
-  git push origin
-  popd
 }
 function help {
 		echo "usage: 	$0 [-p|d|s]"
@@ -108,7 +103,6 @@ done
 ##### MAIN BLOCK
 pushd $HOME/.dlogs/ 
 git pull 
-popd
 if [[ -e "$FileName.gpg" ]]
 then
   dec $FileName
@@ -126,4 +120,7 @@ else
 fi
 
 enc $FileName
-gitup
+git add .
+git commit -m "Added an Entry"
+git push origin
+popd
