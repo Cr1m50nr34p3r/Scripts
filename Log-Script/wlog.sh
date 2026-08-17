@@ -101,7 +101,7 @@ do
 done
 ##### MAIN BLOCK
 pushd $HOME/.dlogs/ > /dev/null
-git pull --rebase || {
+git pull -q --rebase || {
     echo "Git pull failed" >&2
     popd > /dev/null
     exit 1
@@ -110,7 +110,7 @@ if (( Write ))
   then
     if logs=$(dec $FileName)
     then
-      echo $logs > $FileName
+      printf "%s\n" "$logs" > $FileName
       rm "$FileName.gpg"
     fi
     write $FileName || {
@@ -120,9 +120,9 @@ if (( Write ))
     enc $FileName
     git add . > /dev/null
     git commit -m "Added an Entry" > /dev/null
-    git push origin 
+    git push -q origin 
 else 
-  (dec $FileName || cat $FileName) | less 
+  (dec $FileName || cat $FileName) | (PAGER="less -~ -R +1" glow -p - || less -~ -R +1) 
 fi
 popd > /dev/null
 
