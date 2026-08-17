@@ -106,13 +106,13 @@ do
   esac
 done
 ##### MAIN BLOCK
+pushd $HOME/.dlogs/ 
+git pull 
+popd
 if [[ -e "$FileName.gpg" ]]
 then
   dec $FileName
 fi
-pushd $HOME/.dlogs/ 
-git pull 
-popd
 if [[ ! -e "$FileName" ]] 
 then
   echo "FILE NOT FOUND"
@@ -121,9 +121,9 @@ fi
 if (( Write ))
 then
   write $FileName
-  gitup
 else 
     cat $FileName | less
 fi
 
 enc $FileName
+gitup
