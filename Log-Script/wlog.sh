@@ -30,7 +30,8 @@ enc() {
 
 dec() {
   en_file="$1.gpg"
-  if [[ -f $en_file ]] then
+  if [[ -f $en_file ]] 
+  then
     gpg -d $en_file > $1 || {
       echo "Couldnt decrypt" >&2
       exit 1
