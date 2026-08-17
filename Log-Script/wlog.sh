@@ -97,7 +97,6 @@ do
       MonthWord="${months[$Month]}"
       FileName="$HOME/.dlogs/.$Select/$Decade/$Year/$MonthWord/$date.md"
 
-      exit
 
       
 
@@ -109,6 +108,14 @@ done
 if [[ -e "$FileName.gpg" ]]
 then
   dec $FileName
+fi
+pushd $HOME/.dlogs/ 
+git pull 
+popd
+if [[ ! -e "$FileName" ]] 
+then
+  echo "FILE NOT FOUND"
+  exit 1
 fi
 if (( Write ))
 then
