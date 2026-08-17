@@ -122,7 +122,7 @@ if (( Write ))
     git commit -m "Added an Entry" > /dev/null
     git push -q origin 
 else 
-  (dec $FileName || cat $FileName) | (PAGER="less -~ -R +1" glow -p - || less -~ -R +1) 
+  (dec $FileName || cat $FileName) | (PAGER="less -~ -R +1" glow -p - || (less -~ -R +1 || less -~ -R)) 
 fi
 popd > /dev/null
 
