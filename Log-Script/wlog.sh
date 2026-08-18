@@ -86,9 +86,9 @@ do
         [11]="Nov"
         [12]="Dec"
       )
-      Year=$(echo $date | sed "s/\([0-9][0-9]\)-\([0-9][0-9]\)-\([0-9][0-9][0-9][0-9]\)/\3/g")
-      Month=$(echo $date | sed "s/\([0-9][0-9]\)-\([0-9][0-9]\)-\([0-9][0-9][0-9][0-9]\)/\2/g")
       Date=$(echo $date | sed "s/\([0-9][0-9]\)-\([0-9][0-9]\)-\([0-9][0-9][0-9][0-9]\)/\1/g")
+      Month=$(echo $date | sed "s/\([0-9][0-9]\)-\([0-9][0-9]\)-\([0-9][0-9][0-9][0-9]\)/\2/g")
+      Year=$(echo $date | sed "s/\([0-9][0-9]\)-\([0-9][0-9]\)-\([0-9][0-9][0-9][0-9]\)/\3/g")
       Decade="$(echo $Year | sed 's/\(.*\)[0-9]$/\10s/g')"
       MonthWord="${months[$Month]}"
       FileName="$HOME/.dlogs/.$Space/$Decade/$Year/$MonthWord/$date.md"
@@ -101,26 +101,28 @@ do
 done
 ##### MAIN BLOCK
 pushd $HOME/.dlogs/ > /dev/null
+echo "SYNCING WITH REMOTE REPO"
 git pull -q --rebase || {
     echo "Git pull failed" >&2
     popd > /dev/null
     exit 1
 }
 if (( Write ))
+then
+  if logs=$(dec $FileName)
   then
-    if logs=$(dec $FileName)
-    then
-      printf "%s\n" "$logs" > $FileName
-      rm "$FileName.gpg"
-    fi
-    write $FileName || {
-      echo "FILE NOT FOUND"
-      exit 1
-    }
-    enc $FileName
-    git add . > /dev/null
-    git commit -m "Added an Entry" > /dev/null
-    git push -q origin 
+    printf "%s\n" "$logs" > $FileName
+    rm "$FileName.gpg"
+  fi
+  write $FileName || {
+    echo "FILE NOT FOUND" >&2
+    exit 1
+  }
+  enc $FileName
+  echo "UPLOADING TO REMOTE REPO"
+  git add . > /dev/null
+  git commit -m "Added an Entry" > /dev/null
+  git push -q origin 
 else 
   echo "Decrypting" >&2
   (dec $FileName || cat $FileName) | (PAGER="less -~ -R +1" glow -p - || (less -~ -R +1 || less -~ -R)) 
