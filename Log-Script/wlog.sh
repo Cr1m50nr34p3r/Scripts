@@ -19,16 +19,11 @@ write() {
   then
     mkdir -pv "$Dir"
   fi
-  if [[ -e "$1" && -f "$1" ]]
-  then
-    $EDITOR "$1" || vim "$1" 
-  else
-    exit 1
-  fi
+  $EDITOR "$1" || vim "$1" 
 
 }
 enc() {
-  gpg --quiet --pinentry-mode=loopback -c $1 && rm $1 || echo "unencrypted"
+  gpg --quiet -c $1 && rm $1 || echo "unencrypted"
   gpgconf --kill gpg-agent 
 
 }
@@ -37,7 +32,7 @@ dec() {
   en_file="$1.gpg"
   if [[ -f $en_file ]] 
   then
-    gpg --quiet -d --pinentry-mode=loopback $en_file || {
+    gpg --quiet -d $en_file || {
       echo "Couldnt decrypt" >&2
       exit 1
     }
@@ -123,7 +118,7 @@ then
     echo "Could not Decrypt file"
   fi
   write $FileName || {
-    echo "FILE NOT FOUND" >&2
+    echo "FILE NOT FOUND" 
     exit 1
   }
   echo "ENCRYPTING FILE"
