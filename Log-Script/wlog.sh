@@ -19,7 +19,12 @@ write() {
   then
     mkdir -pv "$Dir"
   fi
-  $EDITOR "$1" || vim "$1" 
+  if [[ -e "$1" && -f "$1" ]]
+  then
+    $EDITOR "$1" || vim "$1" 
+  else
+    exit 1
+  fi
 
 }
 enc() {
@@ -109,15 +114,19 @@ git pull -q --rebase || {
 }
 if (( Write ))
 then
+  echo "DECRYPTING FILE"
   if logs=$(dec $FileName)
   then
     printf "%s\n" "$logs" > $FileName
     rm "$FileName.gpg"
+  else
+    echo "Could not Decrypt file"
   fi
   write $FileName || {
     echo "FILE NOT FOUND" >&2
     exit 1
   }
+  echo "ENCRYPTING FILE"
   enc $FileName
   echo "UPLOADING TO REMOTE REPO"
   git add . > /dev/null
