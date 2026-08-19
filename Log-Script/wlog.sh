@@ -23,7 +23,7 @@ write() {
 
 }
 enc() {
-  gpg --quiet -c $1 && rm $1 || echo "unencrypted"
+  gpg --quiet --pinentry-mode=loopback -c $1 && rm $1 || echo "unencrypted"
   gpgconf --kill gpg-agent 
 
 }
@@ -32,7 +32,7 @@ dec() {
   en_file="$1.gpg"
   if [[ -f $en_file ]] 
   then
-    gpg --quiet -d $en_file || {
+    gpg --quiet -d --pinentry-mode=loopback $en_file || {
       echo "Couldnt decrypt" >&2
       exit 1
     }
