@@ -117,6 +117,11 @@ then
   else
     echo "Could not Decrypt file"
   fi
+  if [[ ! -e "$FileName" && -e "$FileName.gpg" ]]
+  then 
+    echo "Encrypted file exists yet decryption failed pls check"
+    exit 1
+  fi
   write $FileName || {
     echo "FILE NOT FOUND" 
     exit 1
@@ -128,7 +133,7 @@ then
   git commit -m "Added an Entry" > /dev/null
   git push -q origin 
 else 
-  echo "Decrypting" >&2
+  echo "Decrypting" 
   (dec $FileName || cat $FileName) | (PAGER="less -~ -R +1" glow -p - || (less -~ -R +1 || less -~ -R)) 
 fi
 popd > /dev/null
