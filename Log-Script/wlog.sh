@@ -115,7 +115,7 @@ then
   if [[ -e $FileName ]]
   then
     echo "ENCRYPTING FILE"
-    gpg --quiet -c $1 && rm $1 || echo "unencrypted"
+    gpg --quiet -c $FileName && rm $FileName || echo "unencrypted"
     gpgconf --kill gpg-agent 
   else
     echo "File does not exist"
