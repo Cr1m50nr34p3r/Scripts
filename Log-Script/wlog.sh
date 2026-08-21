@@ -7,27 +7,25 @@
 ###  \_/\_/ |_|\___/ \__, (_)___/_| |_|###
 ###                  |___/             ###
 ##########################################
-### Variables
+### Default Variables
 Space="Personal"
 Write=1
-CurDecade="$(date +%Y | sed 's/\(.*\)[0-9]$/\10s/g')"
-FileName="$HOME/.dlogs/.$Space/$CurDecade/$(date +%Y)/$(date +%b)/$(date +%d-%m-%Y).md"
+date="$(date +%d-%m-%Y)"
+declare -A months=(
+  [01]="Jan"
+  [02]="Feb"
+  [03]="Mar"
+  [04]="Apr"
+  [05]="May"
+  [06]="Jun"
+  [07]="Jul"
+  [08]="Aug"
+  [09]="Sep"
+  [10]="Oct"
+  [11]="Nov"
+  [12]="Dec"
+)
 ### Function
-write() {
-  Dir=$(echo "$1" | sed 's/^\(.*\)\/[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]\.md/\1/g')
-  if [[ ! -e "$Dir" || ! -d "$Dir" ]]
-  then
-    mkdir -pv "$Dir"
-  fi
-  $EDITOR "$1" || vim "$1" 
-
-}
-enc() {
-  gpg --quiet -c $1 && rm $1 || echo "unencrypted"
-  gpgconf --kill gpg-agent 
-
-}
-
 dec() {
   en_file="$1.gpg"
   if [[ -f $en_file ]] 
@@ -37,7 +35,7 @@ dec() {
       exit 1
     }
   else
-    echo "File Not Found trying to find unencrypted file" >&2
+    echo "File Not Found" >&2
     return 1
   fi
   gpgconf --kill gpg-agent
@@ -52,13 +50,15 @@ function help {
 	}
 
 ### Space
-while getopts ":shpr:h" opt 
+while getopts ":s:hpr:h" opt 
 do
   case "$opt" in
     s)
       Space="Schedule"
+      date=$(date -d "+$OPTARG day" '+%d-%m-%Y')
       ;;
     d) 
+
       Space="Dream"
       ;;
     p)
@@ -66,39 +66,23 @@ do
       ;;
     r)
       Write=0
-      if [[ "$OPTARG" == "t" ]]
+      if [[ "$OPTARG" != "t" ]]
       then 
-        date="$(date +%d-%m-%Y)"
-      else 
         date="$OPTARG"
       fi
-      declare -A months=(
-        [01]="Jan"
-        [02]="Feb"
-        [03]="Mar"
-        [04]="Apr"
-        [05]="May"
-        [06]="Jun"
-        [07]="Jul"
-        [08]="Aug"
-        [09]="Sep"
-        [10]="Oct"
-        [11]="Nov"
-        [12]="Dec"
-      )
-      Date=$(echo $date | sed "s/\([0-9][0-9]\)-\([0-9][0-9]\)-\([0-9][0-9][0-9][0-9]\)/\1/g")
-      Month=$(echo $date | sed "s/\([0-9][0-9]\)-\([0-9][0-9]\)-\([0-9][0-9][0-9][0-9]\)/\2/g")
-      Year=$(echo $date | sed "s/\([0-9][0-9]\)-\([0-9][0-9]\)-\([0-9][0-9][0-9][0-9]\)/\3/g")
-      Decade="$(echo $Year | sed 's/\(.*\)[0-9]$/\10s/g')"
-      MonthWord="${months[$Month]}"
-      FileName="$HOME/.dlogs/.$Space/$Decade/$Year/$MonthWord/$date.md"
-
-      
 
       ;;
     h|*) help  && exit 1 ;;
   esac
+
 done
+Date=$(echo $date | sed "s/\([0-9][0-9]\)-\([0-9][0-9]\)-\([0-9][0-9][0-9][0-9]\)/\1/g")
+Month=$(echo $date | sed "s/\([0-9][0-9]\)-\([0-9][0-9]\)-\([0-9][0-9][0-9][0-9]\)/\2/g")
+Year=$(echo $date | sed "s/\([0-9][0-9]\)-\([0-9][0-9]\)-\([0-9][0-9][0-9][0-9]\)/\3/g")
+Decade="$(echo $Year | sed 's/\(.*\)[0-9]$/\10s/g')"
+MonthWord="${months[$Month]}"
+FileName="$HOME/.dlogs/.$Space/$Decade/$Year/$MonthWord/$date.md"
+
 ##### MAIN BLOCK
 pushd $HOME/.dlogs/ > /dev/null
 echo "SYNCING WITH REMOTE REPO"
@@ -122,12 +106,21 @@ then
     echo "Encrypted file exists yet decryption failed pls check"
     exit 1
   fi
-  write $FileName || {
-    echo "FILE NOT FOUND" 
-    exit 1
-  }
-  echo "ENCRYPTING FILE"
-  enc $FileName
+  Dir=$(echo "$FileName" | sed 's/^\(.*\)\/[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]\.md/\1/g')
+  if [[ ! -e "$Dir" || ! -d "$Dir" ]]
+  then
+    mkdir -pv "$Dir"
+  fi
+  $EDITOR "$FileName" || vim "$FileName" 
+  if [[ -e $FileName ]]
+  then
+    echo "ENCRYPTING FILE"
+    gpg --quiet -c $1 && rm $1 || echo "unencrypted"
+    gpgconf --kill gpg-agent 
+  else
+    echo "File does not exist"
+    exit
+  fi
   echo "UPLOADING TO REMOTE REPO"
   git add . > /dev/null
   git commit -m "Added an Entry" > /dev/null
